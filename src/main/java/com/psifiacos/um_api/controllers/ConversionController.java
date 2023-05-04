@@ -38,7 +38,7 @@ public class ConversionController {
     }
 
     @PostMapping(path = "/addMany", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<List<ConversionDto>> createManyConversion(@Valid @RequestBody List<ConversionDto> conversionDtos) {
-        return new ResponseEntity<>(conversionService.createManyConversion(conversionDtos), OK);
+    public ResponseEntity<List<ConversionDto>> createManyConversion(@Valid @RequestBody List<ConversionDto> conversions) {
+        return new ResponseEntity<>(conversionService.createManyConversion(conversions), OK);
     }
 }

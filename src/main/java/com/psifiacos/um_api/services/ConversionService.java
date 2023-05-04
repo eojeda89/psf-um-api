@@ -17,5 +17,5 @@ public interface ConversionService {
 
     ConversionDto createConversion(ConversionDto conversionDto);
 
-    List<ConversionDto> createManyConversion(List<ConversionDto> conversionDtos);
+    List<ConversionDto> createManyConversion(List<ConversionDto> conversions);
 }

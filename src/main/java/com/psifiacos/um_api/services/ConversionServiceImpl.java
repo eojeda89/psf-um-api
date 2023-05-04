@@ -4,12 +4,10 @@ import com.psifiacos.um_api.dtos.ConversionDto;
 import com.psifiacos.um_api.dtos.ConversionRequest;
 import com.psifiacos.um_api.dtos.ConversionResponse;
 import com.psifiacos.um_api.model.documents.Conversion;
-import com.psifiacos.um_api.model.documents.Operation;
 import com.psifiacos.um_api.model.documents.Unit;
 import com.psifiacos.um_api.model.repositories.ConversionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -83,9 +81,9 @@ public class ConversionServiceImpl implements ConversionService {
     }
 
     @Override
-    public List<ConversionDto> createManyConversion(List<ConversionDto> conversionDtos) {
+    public List<ConversionDto> createManyConversion(List<ConversionDto> conversions) {
         List<ConversionDto> result = new ArrayList<>();
-        for (ConversionDto conversionDto : conversionDtos) {
+        for (ConversionDto conversionDto : conversions) {
             try {
                 createConversion(conversionDto);
                 result.add(conversionDto);
