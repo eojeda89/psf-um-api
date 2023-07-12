@@ -1,6 +1,7 @@
 package com.psifiacos.um_api.services;
 
 import com.psifiacos.um_api.dtos.UnitDto;
+import com.psifiacos.um_api.dtos.UnitDtoResponse;
 import com.psifiacos.um_api.model.documents.Unit;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -14,7 +15,7 @@ public interface UnitService {
 
     UnitDto findById(String id);
 
-    List<UnitDto> findUnits(String name, String symbol, String category, String dataType);
+    List<UnitDtoResponse> findUnits(String name, String symbol, String category, String dataType);
 
     List<Unit> findAll(Query query);
 

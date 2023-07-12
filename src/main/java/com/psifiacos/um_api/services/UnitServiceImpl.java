@@ -1,24 +1,21 @@
 package com.psifiacos.um_api.services;
 
 import com.psifiacos.um_api.dtos.UnitDto;
+import com.psifiacos.um_api.dtos.UnitDtoResponse;
 import com.psifiacos.um_api.model.documents.Category;
 import com.psifiacos.um_api.model.documents.DataType;
 import com.psifiacos.um_api.model.documents.Unit;
 import com.psifiacos.um_api.model.repositories.UnitRepository;
-import com.psifiacos.um_api.model.repositories.support.FilterCondition;
-import com.psifiacos.um_api.model.repositories.support.GenericFilterCriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.psifiacos.um_api.model.repositories.support.FilterOperationEnum.IN;
-import static com.psifiacos.um_api.model.repositories.support.FilterOperationEnum.IS;
 
 @Service
 @Slf4j
@@ -50,31 +47,20 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public List<UnitDto> findUnits(String name, String symbol, String category, String dataType) {
-        GenericFilterCriteriaBuilder filterCriteriaBuilder = new GenericFilterCriteriaBuilder();
-        List<FilterCondition> filterAnd = new ArrayList<>();
-        if (name != null) {
-            FilterCondition nameFilter = new FilterCondition("name", IS, name);
-            filterAnd.add(nameFilter);
-        }
-        if (symbol != null) {
-            FilterCondition symbolFilter = new FilterCondition("symbol", IN, symbol);
-            filterAnd.add(symbolFilter);
-        }
-        if (category != null) {
-            FilterCondition categoryFilter = new FilterCondition("category.name", IS, category);
-            filterAnd.add(categoryFilter);
-        }
+    public List<UnitDtoResponse> findUnits(String name, String symbol, String category, String dataType) {
+        Query query = new Query();
+        if (name != null) query.addCriteria(Criteria.where("name").is(name));
+        if (symbol != null) query.addCriteria(Criteria.where("symbol").is(symbol));
+        if (category != null) query.addCriteria(Criteria.where("category").is(category));
         if (dataType != null) {
             DataType data = dataTypeService.findByNativeIdentifier(dataType);
-            FilterCondition dataTypeFilter = new FilterCondition("category.name", IS, data.getCategory());
-            filterAnd.add(dataTypeFilter);
+            query.addCriteria(Criteria.where("category").is(data.getCategory()));
         }
-        Query query = filterCriteriaBuilder.addCondition(filterAnd, new ArrayList<>());
         List<Unit> units = findAll(query);
-        List<UnitDto> responses = new ArrayList<>();
+        List<UnitDtoResponse> responses = new ArrayList<>();
         for (Unit unit : units) {
-            responses.add(UnitDto.builder()
+            responses.add(UnitDtoResponse.builder()
+                    .id(unit.getId())
                     .name(unit.getName())
                     .symbols(unit.getSymbols())
                     .category(unit.getCategory().getName())
